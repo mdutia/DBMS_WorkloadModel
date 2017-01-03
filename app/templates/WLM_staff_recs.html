@@ -1,0 +1,102 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block content %}
+
+<nav class="navbar-light bg-faded" style="padding-left:60px; padding-right:60px;">
+  <a class="navbar-brand" href="#">
+    <img src="{{ url_for('static', filename = 'BMTO_Banner.GIF' ) }}" width="525" height="70" alt="EU crest">
+  </a>
+  <hr>
+   <ul class="nav navbar-nav pull-right">
+    <li class="nav-item active" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+    <!--background-color: #42f4dc;">-->
+      <a class="nav-link" href="/SetOptions" > Options </a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Reports</a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Edit staff list</a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Edit activity list</a>
+    </li>
+    <li class="nav-item dropdown" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link dropdown-toggle" href="/manage_admins" data-toggle="dropdown"> Admins</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/manage_admins">Manage admins</a><br>
+        <!--<a class="dropdown-item" href="#">Another action</a><br>-->
+        <!--<a class="dropdown-item" href="#">Something else here</a><br>-->
+      </div>
+    </li>
+  </ul>
+  <!--<form class="form-inline float-xs-right">-->
+    <!--<input class="form-control" type="text" placeholder="Search">-->
+    <!--<button class="btn btn-outline-success" type="submit">Search</button>-->
+  <!--</form>-->
+</nav>    
+<!--</div>-->
+<!--</div>-->
+
+<div class="col-md-12" style="padding-left:60px; padding-right:60px;">
+<!--<div class="container" style="border-left: solid LightGrey; border-right: solid LightGrey; border-top: solid LightGrey; ">-->
+   <!--<div class="well" style="border-left: solid LightGrey; background-color: White;">-->
+   <!--<div class="col-md-12" >-->
+   <br>
+      <div class="col-md-2 col-md-offset-1" >
+        <strong><span style="color: DarkRed;  font-size:18px; "> Staff List </span></strong>
+        <p><span style='color:Blue; font-size:11px;'>Alphabetical</span>
+      </div>
+      <div class="col-md-6" >
+        <div class="well well-sm">
+          <strong><span style="color: DarkRed;  font-size:16px; padding-right:10px;"> Filters: </span></strong>
+          <strong><span style="color: Black;  font-size:14px; "> {{session['OptionsString']}} </span></strong>      
+        </div>
+      </div>
+  <!--</div>-->
+  <!--</div>-->
+      <div class="col-sm-4" >
+        {%if recs.has_next==True%}
+        <div class="well well-sm pull-right" style= "height=30px; ">
+              <a href={{url_for ("dashboard", mode='next_page', idd= rec) }}>Next page</a>
+        </div>  
+        {%endif%}
+        {%if recs.has_prev==True%}
+        <div class="well well-sm pull-right" style= "height=30px; ">
+            <a href={{url_for ("dashboard", mode='prev_page', idd= rec) }}>Previous page</a>
+        </div>
+        {%endif%}
+      </div>
+      <!--</div>-->
+</div>
+
+<div class="col-md-12 col-md-offset-1">
+<!--style="padding-left:60px; padding-right:60px;">-->
+            {%if recs|length<=0 %}
+                <br>No users found
+            {%else%}
+                {%- for column in recs|slice(5) %}
+                  <!--<div class="col-md-{ { loop.index }}">-->
+                  <div class="col-md-2">
+                  {%- for item in column %}
+                    <div class="well well-sm" style="height:40px;">
+                    <p> <a href={{url_for ("show_one_rec", idd=item) }}> <span style="color: Blue;">{{item}} </span></a> </p>
+                    </div>
+                  {%- endfor %}
+                  </div>
+                {%- endfor %}
+            {%endif%} 
+    </div>
+    </div>
+
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{{fixes.ie8()}}
+{% endblock %}

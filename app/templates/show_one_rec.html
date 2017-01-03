@@ -1,0 +1,161 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block content %}
+
+<nav class="navbar-light bg-faded" style="padding-left:60px; padding-right:60px;">
+  <a class="navbar-brand" href="#">
+    <img src="{{ url_for('static', filename = 'BMTO_Banner.GIF' ) }}" width="525" height="70" alt="EU crest">
+  </a>
+  <hr>
+   <ul class="nav navbar-nav pull-right">
+    <li class="nav-item active" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+    <!--background-color: #42f4dc;">-->
+      <a class="nav-link" href="/SetOptions" > Options </a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Reports</a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Edit staff list</a>
+    </li>
+    <li class="nav-item" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link" href="/#">Edit activity list</a>
+    </li>
+    <li class="nav-item dropdown" style="border-left: solid LightGrey; border-bottom: solid DarkGrey;">
+      <a class="nav-link dropdown-toggle" href="/manage_admins" data-toggle="dropdown"> Admins</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/manage_admins">Manage admins</a><br>
+        <!--<a class="dropdown-item" href="#">Another action</a><br>-->
+        <!--<a class="dropdown-item" href="#">Something else here</a><br>-->
+      </div>
+    </li>
+  </ul>
+    <!--<form class="form-inline float-xs-right">-->
+        <!--<input class="form-control" type="text" placeholder="Search">-->
+        <!--<button class="btn btn-outline-success" type="submit">Search</button>-->
+    <!--</form>-->
+</nav>    
+<!--</div>-->
+<!--</div>-->
+
+<div class="col-md-12" style="padding-left:80px; padding-right:80px;">
+<div class="container col-md-6 col-md-offset-1" style="border-left: solid LightGrey;">
+    <p><br>
+    <span style= "color: Blue;  font-size:20px;">
+    <strong> {{rec.firstname}}&nbsp{{rec.lastname}} </strong>
+    </span>
+    <span style= "color: Blue;  font-size:18px; margin-left:360px;">
+    <strong>Total: {{rec.total_hours}} hours </strong>
+    </span>
+    </p><br>
+    <span style= "color: DarkRed;  font-size:16px; padding-right:25px;">
+    <strong>Research: {{rec.tot_research}} hours</strong>
+    </span>
+    
+    {%if session['editable']%}
+      <a href="#editResearch" <span class="glyphicon glyphicon-pencil pull-right" data-toggle="collapse"></span></a>
+      <a href="#showResearch" <span class="glyphicon glyphicon-triangle-bottom pull-right" style=" margin-right:12px;"  data-toggle="collapse"></span></a>
+    {%else%}
+        <a href="#showResearch" <span class="glyphicon glyphicon-plus pull-right"  data-toggle="collapse"></span></a>
+    {%endif%}
+    <br>
+    <div id="showResearch" class="container collapse"  style="padding-left:80px;" >
+      {%for c in rec.research.split(';') %}
+      <div class="row">
+        <!--{ % for s in c.split(',') %} -->
+        {%set s= c.split(',') %}
+        <span class= "col-md-3"> {{s[0]}} </span>
+        <span class= "col-md-1"> {{s[1]}} </span>
+        <span class= "col-md-1"> {{s[2]}} </span>
+        <!--{ %endfor%}-->
+      </div>
+      {%endfor%}
+        <span class="col-md-3 col-md-offset-5" ><strong>Total  {{rec.tot_research}} hours </strong></span>
+    </div>
+    <div id="editResearch" class="collapse">
+        <br>
+        <form method="post" action= "/update_research">
+          {{ wtf.quick_form(r_form) }}
+        </form>
+    </div>
+    <hr>
+    
+    
+    <span style= "color: DarkRed;  font-size:16px; padding-right:25px;">
+    <strong>Teaching: {{rec.tot_teaching}} hours</strong>
+    </span>   
+    {%if session['editable']%}
+      <a href="#editTeaching" <span class="glyphicon glyphicon-pencil pull-right" style="color: Blue;"  data-toggle="collapse"></span></a>
+      <a href="#showTeaching" <span class="glyphicon glyphicon-triangle-bottom pull-right" style=" margin-right:12px;"  data-toggle="collapse"></span></a>
+    {%else%}
+        <a href="#showTeaching" <span class="glyphicon glyphicon-plus pull-right"  data-toggle="collapse"></span></a>
+    {%endif%}
+    <br>
+    <div id="showTeaching" class="container collapse"  style="padding-left:80px;" >
+      {%for c in rec.teaching.split(';') %}
+      <div class="row">
+        <!--{ % for s in c.split(',') %} -->
+        {%set s= c.split(',') %}
+        <span class= "col-md-2"> {{s[0]}} </span>
+        <span class= "col-md-2"> {{s[1]}} </span>
+        <span class= "col-md-1"> {{s[2]}} </span>
+        <span class= "col-md-1"> {{s[3]}} </span>
+        <!--{ %endfor%}-->
+      </div>
+      {%endfor%}
+        <span class="col-md-3 col-md-offset-5" ><strong>Total  {{rec.tot_teaching}} hours </strong></span>
+    </div>
+    <div id="editTeaching" class="collapse">
+        <br>
+        <form method="post" action= "/update_teaching">
+          {{ wtf.quick_form(t_form) }}
+        </form>
+    </div>
+    <hr>
+    
+    <span style= "color: DarkRed;  font-size:16px; padding-right:25px;">
+    <strong>Admin: {{rec.tot_admin}} hours</strong>
+    </span>
+    
+    {%if session['editable']%}
+      <a href="#editAdmin" <span class="glyphicon glyphicon-pencil pull-right"  data-toggle="collapse"></span></a>
+      <a href="#showAdmin" <span class="glyphicon glyphicon-triangle-bottom pull-right" style=" margin-right:12px;"  data-toggle="collapse"></span></a>
+    {%else%}
+        <a href="#showAdmin" <span class="glyphicon glyphicon-plus pull-right"  data-toggle="collapse"></span></a>
+    {%endif%}
+    <br>
+    <div id="showAdmin" class="container collapse" style="padding-left:80px;" >
+      {%for c in rec.admin.split(';') %}
+      <div class="row">
+        <!--{ % for s in c.split(',') %} -->
+        {%set s= c.split(',') %}
+        <span class= "col-md-3"> {{s[0]}} </span>
+        <span class= "col-md-1"> {{s[1]}} </span>
+        <span class= "col-md-1"> {{s[2]}} </span>
+        <!--{ %endfor%}-->
+      </div>
+      {%endfor%}
+        <span class="col-md-3 col-md-offset-5" ><strong>Total  {{rec.tot_admin}} hours </strong></span>
+    </div>
+    <div id="editAdmin" class="collapse">
+        <br>
+        <form method="post" action= "/update_admin">
+          {{ wtf.quick_form(ad_form) }}
+        </form>
+    </div>
+    <hr>
+
+</div>
+<div class="container col-md-3" style="border-left: solid LightGrey; border-right:Red">
+
+
+</div>
+
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{{fixes.ie8()}}
+{% endblock %}
